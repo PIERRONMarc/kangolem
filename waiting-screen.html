@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Kangoulem — écran d'attente</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Barlow+Condensed:wght@700&display=swap" rel="stylesheet">
+<style>
+/* =========================================================
+   KANGOULEM — écran d'attente
+   Titre :  ?titre=Pause%20clope
+   Seules animations : logo Twitch + étiquette AFK
+   ========================================================= */
+:root{
+  --noir:    #0B0B0B;
+  --orange:  #E8531F;
+  --creme:   #F5F0E6;
+  --s: 1;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{
+  overflow:hidden;
+  display:grid; place-items:center;
+  background:#050505;
+  font-family:'Barlow Condensed',sans-serif;
+  -webkit-font-smoothing:antialiased;
+}
+.stage{
+  position:relative;
+  width:1920px; height:1080px;
+  transform:scale(var(--s));
+  background:radial-gradient(120% 100% at 25% 0%, #1c1714 0%, #0d0b0a 55%, #060606 100%);
+  color:var(--creme);
+  overflow:hidden;
+}
+
+/* ---------- déco ---------- */
+.deco{position:absolute; inset:0; pointer-events:none}
+.deco svg{position:absolute}
+.croix{opacity:.45}
+@keyframes derive{from{transform:translate3d(0,0,0)} to{transform:translate3d(0,-18px,0)}}
+
+/* ---------- titre ---------- */
+.titre{position:absolute; right:110px; top:50%; transform:translateY(-50%); padding-bottom:28px}
+.titre h1{
+  font-family:'Anton',Impact,Haettenschweiler,sans-serif;
+  font-size:150px; line-height:.84; letter-spacing:.005em;
+  text-transform:uppercase; white-space:nowrap; text-align:right;
+  filter:url(#brosse-fine);
+  text-shadow:0 8px 0 rgba(0,0,0,.5);
+}
+.titre h1 em{font-style:normal; color:var(--orange)}
+.titre .swash{
+  position:absolute; left:-22px; bottom:0;
+  width:calc(100% + 44px); height:42px;
+  filter:url(#brosse);
+}
+
+/* ---------- marque ---------- */
+.marque{position:absolute; top:64px; left:72px; display:flex; align-items:center; gap:18px}
+.marque .barre{width:9px; height:46px; background:var(--orange); filter:url(#brosse-fine)}
+.marque .k{font-family:'Anton',sans-serif; font-size:34px; letter-spacing:.06em; text-transform:uppercase}
+.marque .k em{font-style:normal; color:var(--orange)}
+
+/* ---------- scène ---------- */
+.scene{position:absolute; left:60px; bottom:30px; width:940px; height:650px}
+.scene svg{width:100%; height:100%; overflow:visible}
+
+/* ---------- animations ---------- */
+.anim{transform-box:view-box}
+
+.twitch{animation:flotte-logo 4.2s ease-in-out infinite; transform-origin:800px 275px}
+@keyframes flotte-logo{
+  0%,100%{transform:translateY(0) rotate(0deg)}
+  50%    {transform:translateY(-13px) rotate(-2deg)}
+}
+
+.afk{animation:flotte 4s ease-in-out infinite; transform-origin:250px 150px}
+@keyframes flotte{
+  0%,100%{transform:translateY(0)}
+  50%    {transform:translateY(-9px)}
+}
+.pt1{animation:pointille 2.4s ease-in-out infinite}
+.pt2{animation:pointille 2.4s ease-in-out .25s infinite}
+.pt3{animation:pointille 2.4s ease-in-out .5s infinite}
+@keyframes pointille{0%,100%{opacity:.2} 45%{opacity:1}}
+
+@media (prefers-reduced-motion: reduce){
+  .anim, .deco svg{animation:none !important}
+}
+</style>
+</head>
+<body>
+
+<div class="stage">
+
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <defs>
+      <filter id="brosse" x="-20%" y="-40%" width="140%" height="180%">
+        <feTurbulence type="fractalNoise" baseFrequency="0.022 0.09" numOctaves="4" seed="12" result="n"/>
+        <feDisplacementMap in="SourceGraphic" in2="n" scale="14" xChannelSelector="R" yChannelSelector="G"/>
+      </filter>
+      <filter id="brosse-fine" x="-10%" y="-25%" width="120%" height="150%">
+        <feTurbulence type="fractalNoise" baseFrequency="0.05 0.14" numOctaves="3" seed="5" result="n"/>
+        <feDisplacementMap in="SourceGraphic" in2="n" scale="4" xChannelSelector="R" yChannelSelector="G"/>
+      </filter>
+      <filter id="eclabous" x="-30%" y="-30%" width="160%" height="160%">
+        <feTurbulence type="fractalNoise" baseFrequency="0.014 0.05" numOctaves="5" seed="31" result="n"/>
+        <feDisplacementMap in="SourceGraphic" in2="n" scale="36" xChannelSelector="R" yChannelSelector="G"/>
+      </filter>
+      <path id="stroke" d="M9,17 C120,3 245,27 362,9 C424,0 472,15 497,6 L494,59 C432,68 381,52 320,60 C208,75 108,47 12,63 Z"/>
+      <path id="croix" d="M3,0 L12,8 L21,0 L24,3 L16,12 L24,21 L21,24 L12,16 L3,24 L0,21 L8,12 L0,3 Z"/>
+    </defs>
+  </svg>
+
+  <!-- déco -->
+  <div class="deco" aria-hidden="true">
+    <svg style="top:-130px;left:-80px;width:720px;height:500px;opacity:.3;animation:derive 9s ease-in-out infinite alternate" viewBox="0 0 300 200">
+      <path d="M40,20 L250,0 L280,70 L120,110 L260,120 L240,190 L20,160 Z" fill="#E8531F" filter="url(#eclabous)"/>
+    </svg>
+    <svg style="bottom:-150px;right:-120px;width:820px;height:560px;opacity:.4;animation:derive 11s ease-in-out infinite alternate-reverse" viewBox="0 0 300 200">
+      <path d="M30,30 L220,10 L262,88 L100,124 L204,142 L168,192 L10,150 Z" fill="#E8531F" filter="url(#eclabous)"/>
+    </svg>
+    <svg class="croix" style="top:250px;right:260px;width:36px;height:36px" viewBox="0 0 24 24"><use href="#croix" fill="#E8531F" filter="url(#brosse-fine)"/></svg>
+    <svg class="croix" style="bottom:230px;right:540px;width:24px;height:24px" viewBox="0 0 24 24"><use href="#croix" fill="#F5F0E6" filter="url(#brosse-fine)"/></svg>
+    <svg class="croix" style="top:170px;left:840px;width:26px;height:26px" viewBox="0 0 24 24"><use href="#croix" fill="#F5F0E6" filter="url(#brosse-fine)"/></svg>
+  </div>
+
+  <!-- ============ SCÈNE ============ -->
+  <div class="scene">
+    <svg viewBox="0 0 940 650" aria-label="Kangourou avachi buvant une canette devant un écran Twitch">
+      <defs>
+        <filter id="lueur-violette" x="-70%" y="-70%" width="240%" height="240%">
+          <feGaussianBlur stdDeviation="12" result="b"/>
+          <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+        <clipPath id="canette"><rect x="486" y="342" width="52" height="86" rx="9"/></clipPath>
+      </defs>
+
+      <!-- ===== écran ===== -->
+      <g>
+        <rect x="676" y="170" width="248" height="210" rx="12" fill="#0F0D14" stroke="#F5F0E6" stroke-width="6"/>
+        <rect x="692" y="186" width="216" height="178" rx="6" fill="#17131F"/>
+        <g class="anim twitch" filter="url(#lueur-violette)">
+          <g transform="translate(747,220) scale(0.82)">
+            <path fill="#9146FF" fill-rule="evenodd" d="M26.7,0 L0,26.7 V106.8 H26.7 V133.4 L53.4,106.8 H80.1 L128,60.2 V0 Z M116.9,53.5 L96.1,74.3 H69.4 L50.7,93 V74.3 H26.7 V11.1 H116.9 Z"/>
+            <rect x="89.7" y="33.4" width="11.1" height="33.4" fill="#9146FF"/>
+            <rect x="58.3" y="33.4" width="11.1" height="33.4" fill="#9146FF"/>
+          </g>
+        </g>
+        <rect x="787" y="380" width="26" height="48" fill="#0F0D14" stroke="#F5F0E6" stroke-width="6"/>
+        <rect x="751" y="422" width="98" height="16" rx="8" fill="#0F0D14" stroke="#F5F0E6" stroke-width="6"/>
+      </g>
+
+      <!-- ===== canapé ===== -->
+      <path d="M120,600 C110,470 150,430 240,428 L470,428 C560,432 592,478 584,600 Z"
+            fill="#171310" stroke="#F5F0E6" stroke-width="6" stroke-linejoin="round"/>
+      <path d="M150,470 C220,452 420,452 520,470" fill="none" stroke="#E8531F" stroke-width="7" opacity=".6" stroke-linecap="round"/>
+
+      <!-- ===== queue ===== -->
+      <path d="M300,470 C220,500 150,540 96,592 C130,606 190,590 246,560 C284,540 306,510 316,492 Z"
+            fill="#58473A" stroke="#F5F0E6" stroke-width="6" stroke-linejoin="round"/>
+
+      <!-- ===== jambe arrière ===== -->
+      <path d="M330,440 C400,438 452,470 470,520 C486,562 470,586 440,586 L360,586 C334,586 322,560 330,530 Z"
+            fill="#58473A" stroke="#F5F0E6" stroke-width="6" stroke-linejoin="round"/>
+
+      <!-- ===== torse ===== -->
+      <path d="M296,330 C300,282 336,258 380,262 C428,266 452,306 448,360 C444,420 428,466 396,486 C356,510 306,494 292,452 C280,414 290,372 296,330 Z"
+            fill="#7C6552" stroke="#F5F0E6" stroke-width="7" stroke-linejoin="round"/>
+      <path d="M330,352 C356,342 388,348 404,368 C388,386 348,388 328,374 Z" fill="#9A8570" opacity=".55"/>
+
+      <!-- ===== jambe avant + pied ===== -->
+      <path d="M360,452 C424,444 486,466 512,510 L520,548 C476,566 424,562 386,540 C356,522 344,486 360,452 Z"
+            fill="#7C6552" stroke="#F5F0E6" stroke-width="7" stroke-linejoin="round"/>
+      <path d="M500,506 C556,506 620,520 640,540 C650,552 640,568 618,570 L512,570 C486,570 476,548 482,528 Z"
+            fill="#58473A" stroke="#F5F0E6" stroke-width="6" stroke-linejoin="round"/>
+
+      <!-- ===== tête + oreilles ===== -->
+      <g>
+        <path d="M372,236 C356,196 348,148 356,114 C374,110 396,142 404,180 C410,208 404,228 396,240 Z"
+              fill="#7C6552" stroke="#F5F0E6" stroke-width="6" stroke-linejoin="round"/>
+        <path d="M374,214 C366,186 364,156 368,134 C380,140 390,168 392,192 C393,204 388,214 384,220 Z" fill="#E8531F" opacity=".85"/>
+        <path d="M404,230 C400,190 406,146 420,116 C438,120 448,158 448,194 C448,216 440,230 430,238 Z"
+              fill="#58473A" stroke="#F5F0E6" stroke-width="6" stroke-linejoin="round"/>
+
+        <path d="M356,266 C356,236 382,216 414,218 C452,220 476,244 488,270 C500,294 516,300 528,308 C536,314 534,324 522,328 C500,336 470,338 446,332 C412,324 382,320 366,304 C354,292 354,278 356,266 Z"
+              fill="#7C6552" stroke="#F5F0E6" stroke-width="7" stroke-linejoin="round"/>
+        <path d="M492,300 C506,302 520,308 528,314 C516,320 498,320 486,314 Z" fill="#9A8570" opacity=".5"/>
+        <ellipse cx="529" cy="315" rx="9" ry="7" fill="#231C18"/>
+
+        <!-- lunettes pixel -->
+        <g>
+          <rect x="404" y="252" width="104" height="26" fill="#0E0E0E"/>
+          <rect x="396" y="246" width="30" height="16" fill="#0E0E0E"/>
+          <rect x="424" y="258" width="13" height="13" fill="#F5F0E6"/>
+          <rect x="450" y="258" width="13" height="13" fill="#F5F0E6"/>
+          <rect x="437" y="258" width="13" height="13" fill="#0E0E0E"/>
+          <rect x="476" y="258" width="13" height="13" fill="#F5F0E6"/>
+        </g>
+      </g>
+
+      <!-- ===== bras + canette (levée, statique) ===== -->
+      <g transform="rotate(-20 352 330)">
+        <path d="M352,330 C392,326 434,344 456,378 C472,404 462,432 436,436 C408,440 378,422 362,394 C348,370 342,346 352,330 Z"
+              fill="#8A7261" stroke="#F5F0E6" stroke-width="7" stroke-linejoin="round"/>
+        <path d="M430,384 C462,372 494,376 508,392 C520,406 512,428 490,434 C464,440 436,428 426,410 C420,398 420,388 430,384 Z"
+              fill="#7C6552" stroke="#F5F0E6" stroke-width="6" stroke-linejoin="round"/>
+        <!-- canette -->
+        <rect x="486" y="342" width="52" height="86" rx="9" fill="#C6CBD1" stroke="#F5F0E6" stroke-width="6"/>
+        <g clip-path="url(#canette)">
+          <polygon points="486,428 512,342 538,342 512,428" fill="#1E2E6E"/>
+          <polygon points="486,342 500,342 486,386" fill="#1E2E6E"/>
+          <circle cx="512" cy="386" r="15" fill="#F2C230"/>
+        </g>
+        <rect x="492" y="335" width="40" height="11" rx="5" fill="#9AA1A8" stroke="#F5F0E6" stroke-width="5"/>
+      </g>
+
+      <!-- ===== étiquette AFK ===== -->
+      <g class="anim afk">
+        <g transform="skewX(-8)">
+          <rect x="176" y="128" width="152" height="54" fill="#E8531F"/>
+          <text x="200" y="167" font-family="Anton, Impact, sans-serif" font-size="36" letter-spacing="4" fill="#0B0B0B">AFK</text>
+        </g>
+        <circle class="anim pt1" cx="342" cy="196" r="7" fill="#E8531F"/>
+        <circle class="anim pt2" cx="366" cy="212" r="6" fill="#E8531F"/>
+        <circle class="anim pt3" cx="386" cy="226" r="5" fill="#E8531F"/>
+      </g>
+
+    </svg>
+  </div>
+
+  <!-- titre -->
+  <div class="titre">
+    <svg class="swash" viewBox="0 0 500 70" preserveAspectRatio="none" aria-hidden="true">
+      <use href="#stroke" fill="#E8531F"/>
+    </svg>
+    <h1 id="titre"></h1>
+  </div>
+
+  <!-- marque -->
+  <div class="marque">
+    <i class="barre"></i>
+    <div class="k">Kangou<em>lem</em></div>
+  </div>
+
+</div>
+
+<script>
+const params = new URLSearchParams(location.search);
+
+const titre = params.get('titre') || 'Je reviens';
+const mots = titre.trim().split(/\s+/);
+document.getElementById('titre').innerHTML =
+  mots.length > 1
+    ? mots.slice(0, -1).join(' ') + ' <em>' + mots[mots.length - 1] + '</em>'
+    : '<em>' + titre + '</em>';
+
+function fit(){
+  document.documentElement.style.setProperty('--s', Math.min(innerWidth/1920, innerHeight/1080));
+}
+addEventListener('resize', fit);
+fit();
+</script>
+</body>
+</html>
