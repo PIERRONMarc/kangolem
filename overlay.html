@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Overlay Kangoulem</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Barlow+Condensed:wght@700&display=swap" rel="stylesheet">
+<style>
+/* =========================================================
+   KANGOULEM — overlay minimal
+   Le pseudo vient de l'URL :  overlay.html?pseudo=Oovaald
+   Libellé optionnel        :  &label=Au%20micro
+   Fond de contrôle         :  &preview
+   ========================================================= */
+:root{
+  --noir:   #0B0B0B;
+  --orange: #E8531F;
+  --creme:  #F5F0E6;
+  --s: 1;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{
+  background:transparent;
+  overflow:hidden;
+  display:grid;
+  place-items:center;
+}
+
+/* fond de contrôle, visible uniquement avec ?preview */
+.preview{
+  position:fixed; inset:0; z-index:0;
+  background:radial-gradient(120% 90% at 20% 10%, #2a2118 0%, #120f0d 55%, #070706 100%);
+}
+
+.stage{
+  position:relative; z-index:1;
+  width:1920px; height:1080px;
+  transform:scale(var(--s));
+}
+
+.plaque{
+  position:absolute; left:56px; bottom:56px;
+  display:inline-flex; align-items:center;
+  padding:34px 50px 32px 44px;
+}
+.plaque svg{
+  position:absolute; inset:0; width:100%; height:100%;
+  filter:url(#brosse);
+}
+.plaque .tag{
+  position:absolute; z-index:2;
+  top:-13px; left:30px;
+  background:var(--orange);
+  padding:8px 18px 6px;
+  transform:skewX(-8deg);
+}
+.plaque .tag span{
+  display:block; transform:skewX(8deg);
+  font-family:'Barlow Condensed',sans-serif;
+  font-weight:700; font-size:19px; line-height:1;
+  letter-spacing:.22em; text-transform:uppercase;
+  color:var(--noir);
+}
+.plaque b{
+  position:relative;
+  font-family:'Anton',Impact,Haettenschweiler,sans-serif;
+  font-size:56px; line-height:.88; letter-spacing:.02em;
+  text-transform:uppercase; color:var(--noir); white-space:nowrap;
+}
+</style>
+</head>
+<body>
+
+<div class="stage">
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <defs>
+      <filter id="brosse" x="-20%" y="-40%" width="140%" height="180%">
+        <feTurbulence type="fractalNoise" baseFrequency="0.022 0.09" numOctaves="4" seed="12" result="n"/>
+        <feDisplacementMap in="SourceGraphic" in2="n" scale="14" xChannelSelector="R" yChannelSelector="G"/>
+      </filter>
+      <path id="stroke" d="M9,17 C120,3 245,27 362,9 C424,0 472,15 497,6 L494,59 C432,68 381,52 320,60 C208,75 108,47 12,63 Z"/>
+    </defs>
+  </svg>
+
+  <div class="plaque">
+    <svg viewBox="0 0 500 70" preserveAspectRatio="none" aria-hidden="true">
+      <use href="#stroke" fill="#F5F0E6"/>
+    </svg>
+    <div class="tag"><span id="label"></span></div>
+    <b id="pseudo"></b>
+  </div>
+</div>
+
+<script>
+const params = new URLSearchParams(location.search);
+
+/* ?pseudo=Oovaald — accepte aussi la forme courte ?Oovaald */
+const brut = decodeURIComponent(location.search.slice(1));
+const pseudo = params.get('pseudo')
+            || (brut && !brut.includes('=') ? brut : '')
+            || 'Inconnu';
+
+document.getElementById('pseudo').textContent = pseudo;
+document.getElementById('label').textContent  = params.get('label') || 'Streamer :';
+
+/* fond de contrôle */
+if (params.has('preview')) {
+  const bg = document.createElement('div');
+  bg.className = 'preview';
+  document.body.prepend(bg);
+}
+
+/* mise à l'échelle */
+function fit(){
+  document.documentElement.style.setProperty('--s', Math.min(innerWidth/1920, innerHeight/1080));
+}
+addEventListener('resize', fit);
+fit();
+</script>
+</body>
+</html>
